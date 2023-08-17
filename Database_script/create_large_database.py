@@ -88,9 +88,9 @@ for borrower_id in borrower_ids:
     for _ in range(random.randint(1, 5)):  # Each borrower borrows 1 to 5 books
         book_id = random.choice(book_ids)
         loan_date = fake.date_object()
-
-        # we're gonna pretend there's a 20% chance the book isnt returned yet. this makes our data more interesting
-        if random.random() < 0.20:
+        # we're gonna randomize the chance the book isnt returned yet between a random percentage between 10-50%. this makes our data more interesting but we nede to create a variable first
+        chance_not_returned = random.uniform(0.10,0.50)
+        if random.random() < chance_not_returned:
             #Book not returned
             return_date = None
         else:
