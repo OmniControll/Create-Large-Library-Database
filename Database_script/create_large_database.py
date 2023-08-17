@@ -7,8 +7,8 @@ import sqlite3
 # Start faker session
 fake = Faker()
 
-# Connect to the SQLite database, It will be created if it does not exist already
-conn = sqlite3.connect(r"C:\Users\Kays\Documents\CODING\MySQL\library_project-sqlite3\my_database23.db")
+# Connect to SQLite database, It will be created if it does not exist 
+conn = sqlite3.connect(r"#path to file here")
 c = conn.cursor()
 
 
