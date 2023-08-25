@@ -7,8 +7,8 @@ import sqlite3
 # Start faker session
 fake = Faker()
 
-# Connect to the SQLite database, It will be created if it does not exist already
-conn = sqlite3.connect(r"C:\Users\Kays\Documents\CODING\MySQL\library_project-sqlite3\my_database23.db")
+# Connect to SQLite database, It will be created if it does not exist 
+conn = sqlite3.connect(r"#path to file here")
 c = conn.cursor()
 
 
@@ -53,7 +53,7 @@ c.execute("""
     )
 """)
 
-#  data for the Users table if it does not exist yet
+#  data for the Users table
 roles = ['librarian', 'borrower', 'administrator']
 for _ in range(20000):
     username = fake.user_name()
@@ -84,19 +84,20 @@ for _ in range(20000):
 
 #includes borrowers that have loaned multiple books. 
 # Generate a random number of loans for each borrower, with a random book for each loan
+# we're gonna randomize the chance the book isnt returned yet between a random percentage between 10-50%. this makes our data more interesting but we nede to create a variable first
 for borrower_id in borrower_ids:
     for _ in range(random.randint(1, 5)):  # Each borrower borrows 1 to 5 books
         book_id = random.choice(book_ids)
         loan_date = fake.date_object()
-
-        # we're gonna pretend there's a 20% chance the book isnt returned yet. this makes our data more interesting
-        if random.random() < 0.20:
+        chance_not_returned = random.uniform(0.10,0.50)
+        if random.random() < chance_not_returned:
             #Book not returned
             return_date = None
         else:
             #book is returned 1-30 days after loan date
             return_date = loan_date + timedelta(days=random.randint(1,30))
-# for database insertion: if the book is not returned, we only insert loan_date and exclude return_date
+            
+# if the book is not returned, we only insert loan_date and exclude return_date
         if return_date:
             c.execute("""
                 INSERT INTO Loans(book_id, borrower_id, loan_date, return_date)
@@ -108,6 +109,6 @@ for borrower_id in borrower_ids:
                 VALUES(?,?,?)""", (book_id, borrower_id, loan_date.strftime("%Y-%m-%d")))
             
 
-# Commit the changes and finally, close connection
+# Commit the changes and close connection
 conn.commit()
 conn.close()
